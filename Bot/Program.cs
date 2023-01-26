@@ -18,14 +18,13 @@ namespace TelegramBotExperiments
             var cts = new CancellationTokenSource();
             var cancellationToken = cts.Token;
             var receiverOptions = new ReceiverOptions
-
             {
                 AllowedUpdates = { },
             };
 
             bot.StartReceiving(
-                DistributorMessageOfType.HandleUpdateAsync,
-                DistributorMessageOfType.HandleErrorAsync,
+                MessageHandler.HandleUpdateAsync,
+                MessageHandler.HandleErrorAsync,
                 receiverOptions,
                 cancellationToken
             );

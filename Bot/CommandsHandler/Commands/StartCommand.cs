@@ -9,11 +9,11 @@ public class StartCommand : ICommandProcessor
         return command.CommandName == @"/start";
     }
 
-    public CommandResult ProcessCommand(ICommand command, Update update)
+    public CommandResult ProcessCommand(ICommand command)
     {
         if (!CanProcess(command)) throw new ArgumentException(nameof(command));
 
-        User user = update.Message.From;
+        User user = command.User;
         Player? player;
 
         using (ApplicationDbContext context = new ApplicationDbContext())
@@ -33,13 +33,13 @@ public class StartCommand : ICommandProcessor
             }
         }
 
-        return new CommandResult()
-        {
-            Text = "/start executed"
-        };
-    }private Player CreatePlayer()
+        string commandResultText = $"{command.CommandName} Executed.";
+
+        return new CommandResult(commandResultText);
+    }
+    
+    private Player CreatePlayer()
     {
-        throw new NotImplementedException();
         return new Player();
     }
 }

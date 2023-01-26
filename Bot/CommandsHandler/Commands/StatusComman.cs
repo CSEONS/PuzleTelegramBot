@@ -7,13 +7,13 @@ public class StatusCommand : ICommandProcessor
         return command.CommandName == "/status";
     }
 
-    public CommandResult ProcessCommand(ICommand command, Update update)
+    public CommandResult ProcessCommand(ICommand command)
     {
         if (!CanProcess(command)) throw new ArgumentException(nameof(command));
         Console.WriteLine($"{command.CommandName} command processed");
-        return new CommandResult()
-        {
-            Text = "/status executed"
-        };
+
+        string commandResultText = "/status executed";
+
+        return new CommandResult(commandResultText);
     }
 }
