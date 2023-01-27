@@ -3,7 +3,7 @@
     public class Player
     {
         public long Id { get; set; }
-        public long UserId { get; set; }
+        public long TelegraIdentifier { get; set; }
         public string? Name { get; set; }
         public int Rating { get; set; }
         public int Rank { get; set; }
