@@ -19,13 +19,13 @@ public class StartCommand : ICommandProcessor
 
         using (ApplicationDbContext context = new ApplicationDbContext())
         {
-            player = context.Players.FirstOrDefault(x => x.TelegraIdentifier == user.Id);
+            player = context.Players.FirstOrDefault(x => x.TelegramIdentifier == user.Id);
 
             if (player is null)
             {
                 player = new Player()
                 {
-                    TelegraIdentifier = user.Id,
+                    TelegramIdentifier = user.Id,
                     Name = user.Username
                 };
                 context.Players.Add(player);
