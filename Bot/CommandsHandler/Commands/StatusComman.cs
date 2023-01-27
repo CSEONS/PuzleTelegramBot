@@ -12,7 +12,7 @@ public class StatusCommand : ICommandProcessor
         if (!CanProcess(command)) throw new ArgumentException(nameof(command));
         Console.WriteLine($"{command.CommandName} command processed");
 
-        string commandResultText = "/status executed";
+        string commandResultText = $"{command.CommandName} executed";
 
         return new CommandResult(commandResultText);
     }

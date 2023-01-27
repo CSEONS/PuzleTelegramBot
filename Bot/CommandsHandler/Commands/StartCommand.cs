@@ -1,5 +1,6 @@
 ﻿using Bot;
 using Models;
+using Newtonsoft.Json;
 using Telegram.Bot.Types;
 
 public class StartCommand : ICommandProcessor
@@ -18,28 +19,22 @@ public class StartCommand : ICommandProcessor
 
         using (ApplicationDbContext context = new ApplicationDbContext())
         {
-            player = context.Players.FirstOrDefault(x => x.Name == user.FirstName && x.Id == user.Id) ?? CreatePlayer();
+            player = context.Players.FirstOrDefault(x => x.UserId == user.Id);
 
             if (player is null)
             {
                 player = new Player()
                 {
-                    Id = user.Id,
-                    Name = user.FirstName,
-                    Rank = context.Players.Max(x => x.Rank) + 1,
-                    Rating = 0,
-                    SolvedPuzzles = 0
+                    UserId = user.Id,
+                    Name = user.Username
                 };
+                context.Players.Add(player);
+                context.SaveChanges();
             }
         }
 
-        string commandResultText = $"{command.CommandName} Executed.";
+        string commandResultText = $"{command.CommandName} executed";
 
         return new CommandResult(commandResultText);
-    }
-    
-    private Player CreatePlayer()
-    {
-        return new Player();
     }
 }
