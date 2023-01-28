@@ -8,13 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
-    <PackageReference Include="Telegram.Bot" Version="18.0.0" />
+    <Compile Remove="Text\**" />
+    <EmbeddedResource Remove="Text\**" />
+    <None Remove="Text\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Text\" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
+    <PackageReference Include="Telegram.Bot" Version="18.0.0" />
   </ItemGroup>
 
 </Project>

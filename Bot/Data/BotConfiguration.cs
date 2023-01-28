@@ -1,4 +1,4 @@
-﻿namespace Bot.Configuraion
+﻿namespace Bot.Data
 {
     public class BotConfiguration
     {

@@ -1,4 +1,6 @@
-﻿using Telegram.Bot.Types;
+﻿using Bot;
+using Bot.Data.Handler;
+using Telegram.Bot.Types;
 
 public class StatusCommand : ICommandProcessor
 {
@@ -10,9 +12,13 @@ public class StatusCommand : ICommandProcessor
     public CommandResult ProcessCommand(ICommand command)
     {
         if (!CanProcess(command)) throw new ArgumentException(nameof(command));
-        Console.WriteLine($"{command.CommandName} command processed");
 
-        string commandResultText = $"{command.CommandName} executed";
+        string commandResultText;
+
+        using (var context = new PlayerDBContext())
+        {
+            commandResultText = context.Players.FirstOrDefault(x => x.TelegramIdentifier == command.User.Id).DisplayParams;
+        }
 
         return new CommandResult(commandResultText);
     }

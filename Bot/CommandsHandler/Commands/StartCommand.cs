@@ -1,6 +1,5 @@
-﻿using Bot;
-using Models;
-using Newtonsoft.Json;
+﻿using Bot.Data.Handler;
+using Bot.Models.Data;
 using Telegram.Bot.Types;
 
 public class StartCommand : ICommandProcessor
@@ -17,23 +16,24 @@ public class StartCommand : ICommandProcessor
         User user = command.User;
         Player? player;
 
-        using (ApplicationDbContext context = new ApplicationDbContext())
+        using (PlayerDBContext context = new PlayerDBContext())
         {
             player = context.Players.FirstOrDefault(x => x.TelegramIdentifier == user.Id);
 
             if (player is null)
             {
-                player = new Player()
-                {
-                    TelegramIdentifier = user.Id,
-                    Name = user.Username
-                };
+                player = new Player(user.Id, user.Username ?? Player.defaultName);
+
+                player.CurrentPuzzle ??= Puzzle.For(player);
                 context.Players.Add(player);
                 context.SaveChanges();
             }
+
+            if (player.CurrentPuzzle is null)
+                player.CurrentPuzzle ??= Puzzle.For(player);
         }
 
-        string commandResultText = $"{command.CommandName} executed";
+        string commandResultText = $"{player.CurrentPuzzle?.Text ?? string.Empty}";
 
         return new CommandResult(commandResultText);
     }

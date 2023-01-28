@@ -1,8 +1,8 @@
-﻿namespace PuzleBot
+﻿namespace Bot.CommandsHandler
 {
     public class CommandExecuter
     {
-        static Dictionary<string, ICommandProcessor> Commands = new Dictionary<string, ICommandProcessor>()
+        static readonly Dictionary<string, ICommandProcessor> Commands = new()
         {
             {@"/start", new StartCommand()},
             {@"/status",new StatusCommand()}
@@ -11,6 +11,7 @@
         public static CommandResult ExecuteCommand(Command command)
         {
             ICommandProcessor commandProcessor = Commands.FirstOrDefault(x => x.Key.ToLower() == command.CommandName.ToLower()).Value;
+
             if (commandProcessor is null)
                 return CommandResult.Empty;
 

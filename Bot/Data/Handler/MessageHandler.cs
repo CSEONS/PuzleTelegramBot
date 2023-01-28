@@ -1,4 +1,4 @@
-﻿using PuzleBot;
+﻿using Bot.CommandsHandler;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -22,9 +22,10 @@ public class MessageHandler
         CommandResult commandResult = CommandResult.Empty;
 
         if (CommandExecuter.TryParse(clientMessage, out ICommandProcessor commandProcessor))
-        {
             commandResult = commandProcessor.ProcessCommand(command);
-        };
+
+        if (string.IsNullOrEmpty(commandResult.Text))
+            commandResult = new CommandResult("Empty");
 
         await botClient.SendTextMessageAsync(chatId, commandResult.Text);
     }

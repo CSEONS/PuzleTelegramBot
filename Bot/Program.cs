@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Polling;
-using Bot.Configuraion;
+using Bot.Data;
 
 namespace TelegramBotExperiments
 {

@@ -1,20 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bot.Models.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot
+namespace Bot.Data.Handler
 {
-    internal class ApplicationDbContext : DbContext
+    public class PlayerDBContext : DbContext
     {
-        public DbSet<Puzzle> Puzzles { get; set; }
         public DbSet<Player> Players { get; set; }
+        public DbSet<Puzzle> Puzzles { get; internal set; }
 
-        public ApplicationDbContext()
+        public PlayerDBContext()
         {
             Database.EnsureCreated();
         }
@@ -22,6 +22,11 @@ namespace Bot
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=Puzzle;Trusted_Connection=True;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.UseIdentityColumns(0, 1);
         }
     }
 }
