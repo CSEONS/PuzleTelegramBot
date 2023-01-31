@@ -1,16 +1,19 @@
-﻿namespace Bot.CommandsHandler
+﻿using Bot.CommandsHandler.Commands;
+
+namespace Bot.CommandsHandler
 {
     public class CommandExecuter
     {
         static readonly Dictionary<string, ICommandProcessor> Commands = new()
         {
             {@"/start", new StartCommand()},
-            {@"/status",new StatusCommand()}
+            {@"/status",new StatusCommand()},
+            {@"/changemessage", new ChangeMessage()},
         };
 
         public static CommandResult ExecuteCommand(Command command)
         {
-            ICommandProcessor commandProcessor = Commands.FirstOrDefault(x => x.Key.ToLower() == command.CommandName.ToLower()).Value;
+            ICommandProcessor commandProcessor = Commands.FirstOrDefault(x => x.Key.ToLower() == command.CommandName.Split().FirstOrDefault()?.ToLower()).Value;
 
             if (commandProcessor is null)
                 return CommandResult.Empty;

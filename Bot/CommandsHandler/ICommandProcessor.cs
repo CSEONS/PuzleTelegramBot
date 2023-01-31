@@ -2,6 +2,6 @@
 
 public interface ICommandProcessor
 {
-    CommandResult ProcessCommand(ICommand command);
+    CommandResult ProcessCommand(Command command);
     bool CanProcess(ICommand command);
 }

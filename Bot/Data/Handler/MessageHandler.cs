@@ -1,8 +1,7 @@
 ﻿using Bot.CommandsHandler;
+using Bot.Models.Data;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using TelegramBotExperiments;
 
 public class MessageHandler
 {
@@ -23,9 +22,11 @@ public class MessageHandler
 
         if (CommandExecuter.TryParse(clientMessage, out ICommandProcessor commandProcessor))
             commandResult = commandProcessor.ProcessCommand(command);
+        else
+            commandResult = Puzzle.ParseAnswerForPlayer(command);
 
         if (string.IsNullOrEmpty(commandResult.Text))
-            commandResult = new CommandResult("Empty");
+            return;
 
         await botClient.SendTextMessageAsync(chatId, commandResult.Text);
     }

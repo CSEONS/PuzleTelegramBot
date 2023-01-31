@@ -1,6 +1,6 @@
 ﻿namespace Bot.CommandsHandler.Commands
 {
-    public class TemplateCommand : ICommandProcessor
+    public class AddPuzzleCommand : ICommandProcessor
     {
         public bool CanProcess(ICommand command)
         {
