@@ -1,8 +1,11 @@
-﻿namespace Bot.CommandsHandler.Commands
+﻿using Bot.Data;
+using Bot.Models;
+
+namespace Bot.CommandsHandler.Commands
 {
-    public class TemplateCommand : ICommandProcessor
+    internal class GetPuzzleCommand : ICommandProcessor
     {
-        public static string CommandName => @"/mycommand";
+        public static string CommandName => @"/get";
 
         public bool CanProcess(ICommand command)
         {
@@ -13,9 +16,12 @@
         {
             if (!CanProcess(command)) throw new ArgumentException(nameof(command));
 
-            string commandResultText = $"{command.CommandName} executed";
+            using (var context = new PlayerDBContext())
+            {
+                
+            }
 
-            return new CommandResult(commandResultText);
+            return CommandResult.Empty;
         }
     }
 }

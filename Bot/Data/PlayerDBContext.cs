@@ -1,12 +1,13 @@
-﻿using Bot.Models.Data;
+﻿using Bot.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bot.Data.Handler
+namespace Bot.Data
 {
     public class PlayerDBContext : DbContext
     {
         public DbSet<Player> Players { get; set; }
-        public DbSet<Puzzle> Puzzles { get; internal set; }
+        public DbSet<Puzzle> Puzzles { get; set; }
+        public DbSet<SolvedPuzzle> SolvedPuzzles { get; set; }
 
         public PlayerDBContext()
         {
@@ -15,7 +16,7 @@ namespace Bot.Data.Handler
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=Puzzle;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=MuzzlePuzzle;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

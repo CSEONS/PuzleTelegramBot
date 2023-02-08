@@ -1,5 +1,5 @@
 ﻿using Bot.CommandsHandler;
-using Bot.Models.Data;
+using Bot.Models;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -23,7 +23,7 @@ public class MessageHandler
         if (CommandExecuter.TryParse(clientMessage, out ICommandProcessor commandProcessor))
             commandResult = commandProcessor.ProcessCommand(command);
         else
-            commandResult = Puzzle.ParseAnswerForPlayer(command);
+            commandResult = Puzzle.ParesAnswer(command);
 
         if (string.IsNullOrEmpty(commandResult.Text))
             return;

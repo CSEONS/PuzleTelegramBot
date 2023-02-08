@@ -1,42 +1,39 @@
-﻿using Bot.Data.Handler;
+﻿using Bot.Data;
+using System.ComponentModel.DataAnnotations.Schema;
 using Telegram.Bot.Types;
 
-namespace Bot.Models.Data
+namespace Bot.Models
 {
     public class Player
     {
-
-        public Player(long telegramIdentifier, string name)
-        {
-            TelegramIdentifier = telegramIdentifier;
-            Name = name;
-        }
-
-        public static string defaultName = $"Player{new Random().Next(1000, 9999)}";
-
         public int Id { get; set; }
         public long TelegramIdentifier { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int Rating { get; set; }
         public int Rank { get; set; }
-        public Puzzle CurrentPuzzle { get; set; }
-        public List<Puzzle>? SolvedPuzzles { get; set; } = new();
+        public int? CurrentPuzzleId { get; set; }
+        public virtual Puzzle? CurrentPuzzle { get; set; }
+        public virtual ICollection<Puzzle>? SolvedPuzzles { get; set; }
 
-        public string DisplayParams =>
-        $"ID {Id}\n" +
-        $"Name {Name}\n" +
-        $"Solved puzzles {SolvedPuzzles?.Count ?? 0}\n" +
-        $"Rating {Rating}\n" +
-        $"Rank {Rank}\n";
-
-        internal static Player CreateInDB(User user, PlayerDBContext context)
+        public static void TryCreateNew(string? username, long id)
         {
-            var player = new Player(user.Id, user.Username ?? Player.defaultName);
+            using(var context = new PlayerDBContext())
+            {
+                Player? player = context.Players.FirstOrDefault(x => x.TelegramIdentifier == id);
 
-            context.Players.Add(player);
-            context.SaveChanges();
+                if (player is not null)
+                    return;
 
-            return player;
+
+                player = new Player()
+                {
+                    Name = username,
+                    TelegramIdentifier = id,
+                };
+
+                context.Players.Add(player);
+                context.SaveChanges();
+            }
         }
     }
 }

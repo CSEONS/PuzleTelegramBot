@@ -1,14 +1,16 @@
 ﻿using Bot;
-using Bot.Data.Handler;
+using Bot.Data;
 using Telegram.Bot.Types;
 
 namespace Bot.CommandsHandler.Commands
 {
     public class StatusCommand : ICommandProcessor
     {
+        public static string CommandName => @"/status";
+
         public bool CanProcess(ICommand command)
         {
-            return command.CommandName.ToLower() == "/status".ToLower();
+            return command.CommandName.ToLower() == CommandName.ToLower();
         }
 
         public CommandResult ProcessCommand(Command command)
@@ -19,7 +21,7 @@ namespace Bot.CommandsHandler.Commands
 
             using (var context = new PlayerDBContext())
             {
-                commandResultText = context.Players.FirstOrDefault(x => x.TelegramIdentifier == command.User.Id).DisplayParams;
+                commandResultText = context.Players.FirstOrDefault(x => x.TelegramIdentifier == command.User.Id)?.ToString();
             }
 
             return new CommandResult(commandResultText);

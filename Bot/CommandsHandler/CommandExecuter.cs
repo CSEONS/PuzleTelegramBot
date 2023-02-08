@@ -6,9 +6,8 @@ namespace Bot.CommandsHandler
     {
         static readonly Dictionary<string, ICommandProcessor> Commands = new()
         {
-            {@"/start", new StartCommand()},
-            {@"/status",new StatusCommand()},
-            {@"/changemessage", new ChangeMessage()},
+            {StartCommand.CommandName, new StartCommand()},
+            {StatusCommand.CommandName,new StatusCommand()},
         };
 
         public static CommandResult ExecuteCommand(Command command)

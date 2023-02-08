@@ -1,88 +1,46 @@
-﻿using Bot.Data.Handler;
-using Bot.Data.Models;
+﻿using Bot.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Runtime.InteropServices;
+using Newtonsoft.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace Bot.Models.Data
+namespace Bot.Models
 {
     public class Puzzle
     {
         public int Id { get; set; }
-        public string? Name { get; set; }
         public string Text { get; set; }
         public string Answers { get; set; }
 
-        
-        public readonly static Puzzle DefaultPuzzle = new()
+        public static CommandResult ParesAnswer(string answer, Puzzle puzzle)
         {
-            Name = "Зеленое чудо",
-            Text = "В лесу она родилась, в лесу она росла.",
-            Answers = "елочка ёлочка елка ёлка"
-        };
+            if (puzzle is null)
+                throw new ArgumentNullException(nameof(puzzle));
 
-        public bool CheckAnswer(string userAnswer)
-        {
-            foreach (var answer in Answers.Split())
+            foreach (var correctAnswer in puzzle.Answers.Split())
             {
-                if (userAnswer == answer)
-                    return true;
+                if (answer == correctAnswer)
+                    return new CommandResult(PuzzleInformationMessage.Information[PuzzleInformationMessage.InformationType.CorrectAnswer]);
             }
 
-            return false;
+            return new CommandResult(PuzzleInformationMessage.Information[PuzzleInformationMessage.InformationType.WrongAnswer]);
         }
 
-        public static Puzzle For(Player player)
+        public static Puzzle? GetFirstUnsolvedFor(Player player)
         {
-            if (player is null) throw new ArgumentNullException($"{player}");
+            var context = new PlayerDBContext();
 
-            using var context = new PlayerDBContext();
             if (player.SolvedPuzzles is null)
-                return context.Puzzles.First();
+                throw new NotImplementedException($"The solved puzzles is null: {JsonConvert.SerializeObject(player, Formatting.Indented)}");
 
-            if (!context.Puzzles.Any())
+            foreach (var puzzle in context.Puzzles)
             {
-                context.Puzzles.Add(Puzzle.DefaultPuzzle);
-                context.SaveChanges();
+                if (player.SolvedPuzzles.Any(x => x == puzzle))
+                    continue;
+
+                return puzzle;
             }
 
-            return context.Puzzles.FirstOrDefault(x => !player.SolvedPuzzles.Contains(x));
-        }
-
-        public static CommandResult ParseAnswerForPlayer(Command command)
-        {
-            using (var context = new PlayerDBContext())
-            {
-                Player player = context.Players.Include(x => x.CurrentPuzzle).FirstOrDefault(x => x.TelegramIdentifier == command.User.Id);
-
-                if (player is null)
-                    return CommandResult.Empty;
-
-                if (player.CurrentPuzzle is null)
-                {
-                    player.CurrentPuzzle = Puzzle.DefaultPuzzle;
-                    context.Update(player);
-                    context.SaveChanges();
-                }
-
-                foreach (var answer in player.CurrentPuzzle.Answers.Split())
-                {
-                    if (command.FullCommand.ToLower() == answer.ToLower())
-                    {
-                        if (player.SolvedPuzzles is null)
-                            player.SolvedPuzzles = new List<Puzzle>();
-
-                        player.SolvedPuzzles.Add(player.CurrentPuzzle);
-                        player.CurrentPuzzle = context.Puzzles.First(x => !player.SolvedPuzzles.Contains(x));
-
-                        context.Update(player);
-                        context.SaveChanges();
-                        return new CommandResult(string.Format(PuzzleInformationMessage.PuzzleInformation[PuzzleInformationMessage.InformationType.CorrectAnswer], answer));
-                    }
-                }
-
-                return new CommandResult(string.Format(PuzzleInformationMessage.PuzzleInformation[PuzzleInformationMessage.InformationType.WrongAnswer], player.Name));
-            }
+            return null;
         }
     }
 }

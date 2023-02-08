@@ -2,9 +2,11 @@
 {
     public class AddPuzzleCommand : ICommandProcessor
     {
+        public static string CommandName => @"/mycommand";
+
         public bool CanProcess(ICommand command)
         {
-            return command.CommandName.ToLower() == "/mycommand".ToLower();
+            return command.CommandName.ToLower() == CommandName.ToLower();
         }
 
         public CommandResult ProcessCommand(Command command)
