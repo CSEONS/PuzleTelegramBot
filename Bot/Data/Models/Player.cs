@@ -13,11 +13,10 @@ namespace Bot.Models
         public int Rank { get; set; }
         public int? CurrentPuzzleId { get; set; }
         public virtual Puzzle? CurrentPuzzle { get; set; }
-        public virtual ICollection<Puzzle>? SolvedPuzzles { get; set; }
 
         public static void TryCreateNew(string? username, long id)
         {
-            using(var context = new PlayerDBContext())
+            using(var context = new MuzzlePuzzleDBContext())
             {
                 Player? player = context.Players.FirstOrDefault(x => x.TelegramIdentifier == id);
 

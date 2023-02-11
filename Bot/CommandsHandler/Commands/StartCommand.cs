@@ -19,7 +19,7 @@ namespace Bot.CommandsHandler.Commands
 
             Player.TryCreateNew(command.User.Username, command.User.Id);
 
-            return new CommandResult(PuzzleInformationMessage.Information[PuzzleInformationMessage.InformationType.Start]);
+            return new CommandResult(PuzzleMessage.GetInformationString(PuzzleMessage.InformationType.Start));
         }
     }
 }

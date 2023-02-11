@@ -19,7 +19,7 @@ namespace Bot.CommandsHandler.Commands
 
             string commandResultText;
 
-            using (var context = new PlayerDBContext())
+            using (var context = new MuzzlePuzzleDBContext())
             {
                 commandResultText = context.Players.FirstOrDefault(x => x.TelegramIdentifier == command.User.Id)?.ToString();
             }

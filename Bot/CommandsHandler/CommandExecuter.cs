@@ -8,6 +8,8 @@ namespace Bot.CommandsHandler
         {
             {StartCommand.CommandName, new StartCommand()},
             {StatusCommand.CommandName,new StatusCommand()},
+            {GetPuzzleCommand.CommandName,new GetPuzzleCommand()},
+            {DisplaySolvedPuzzles.CommandName,new DisplaySolvedPuzzles()},
         };
 
         public static CommandResult ExecuteCommand(Command command)
