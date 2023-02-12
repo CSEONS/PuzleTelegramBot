@@ -1,14 +1,30 @@
-﻿namespace Bot.CommandsHandler.Commands
+﻿using Bot.Data;
+using Bot.Models;
+using System.Text;
+
+namespace Bot.CommandsHandler.Commands
 {
     public class AddPuzzleCommand : ICommandProcessor
     {
-        public static string CommandName => @"/mycommand";
+        public static string CommandName => _commandName;
+        public Player.Permissions Permission => Player.Permissions.Administrator;
+
+        private static string _commandName = @"/add";
 
         public bool CanProcess(ICommand command)
         {
-            return command.CommandName.ToLower() == CommandName.ToLower();
+            return command.CommandName.ToLower() == _commandName.ToLower();
         }
 
+        public string GetDescription()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine(_commandName);
+            stringBuilder.AppendLine(MuzzlePuzzleMessage.GetDescriptionString(this));
+
+            return stringBuilder.ToString();
+        }
         public CommandResult ProcessCommand(Command command)
         {
             if (!CanProcess(command)) throw new ArgumentException(nameof(command));

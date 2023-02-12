@@ -1,16 +1,31 @@
 ﻿using Bot;
 using Bot.Data;
+using Bot.Models;
+using System.Text;
 using Telegram.Bot.Types;
 
 namespace Bot.CommandsHandler.Commands
 {
     public class StatusCommand : ICommandProcessor
     {
-        public static string CommandName => @"/status";
+        public static string CommandName => _commandName;
+        public Player.Permissions Permission => Player.Permissions.User;
+
+        private static string _commandName = @"/status";
 
         public bool CanProcess(ICommand command)
         {
-            return command.CommandName.ToLower() == CommandName.ToLower();
+            return command.CommandName.ToLower() == _commandName.ToLower();
+        }
+
+        public string GetDescription()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine(_commandName);
+            stringBuilder.AppendLine(MuzzlePuzzleMessage.GetDescriptionString(this));
+
+            return stringBuilder.ToString();
         }
 
         public CommandResult ProcessCommand(Command command)

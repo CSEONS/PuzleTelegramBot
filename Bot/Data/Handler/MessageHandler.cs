@@ -22,6 +22,8 @@ public class MessageHandler
 
         if (CommandExecuter.TryParse(clientMessage, out ICommandProcessor commandProcessor))
             commandResult = commandProcessor.ProcessCommand(command);
+        else if (CommandExecuter.IsCommandForm(command))
+            commandResult = CommandExecuter.NoCommand;
         else
             commandResult = Puzzle.ParesAnswer(command);
 

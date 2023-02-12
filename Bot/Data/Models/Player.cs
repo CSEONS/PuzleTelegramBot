@@ -1,11 +1,14 @@
 ﻿using Bot.Data;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 using Telegram.Bot.Types;
 
 namespace Bot.Models
 {
     public class Player
     {
+        
+
         public int Id { get; set; }
         public long TelegramIdentifier { get; set; }
         public string? Name { get; set; }
@@ -13,6 +16,14 @@ namespace Bot.Models
         public int Rank { get; set; }
         public int? CurrentPuzzleId { get; set; }
         public virtual Puzzle? CurrentPuzzle { get; set; }
+        public Permissions Permission { get; set; }
+
+        public enum Permissions
+        {
+            Manager,
+            Administrator,
+            User
+        }
 
         public static void TryCreateNew(string? username, long id)
         {
@@ -23,7 +34,6 @@ namespace Bot.Models
                 if (player is not null)
                     return;
 
-
                 player = new Player()
                 {
                     Name = username,
@@ -33,6 +43,16 @@ namespace Bot.Models
                 context.Players.Add(player);
                 context.SaveChanges();
             }
+        }
+
+        public override string ToString()
+        {
+            return
+                $"Id: {Id}\n" +
+                $"Name: {Name}\n" +
+                $"Rank: {Rank}\n" +
+                $"Rating: {Rating}\n"+
+                $"Permission: {Permission}";
         }
     }
 }

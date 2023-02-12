@@ -1,15 +1,21 @@
 ﻿using Bot.CommandsHandler.Commands;
+using Bot.Data;
+using System.Text.RegularExpressions;
 
 namespace Bot.CommandsHandler
 {
     public class CommandExecuter
     {
-        static readonly Dictionary<string, ICommandProcessor> Commands = new()
+        public static CommandResult NoCommand => new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.ItNoPuzzle));
+        private static Regex _regex = new Regex("^[$\\/]");
+
+        public static readonly Dictionary<string, ICommandProcessor> Commands = new()
         {
             {StartCommand.CommandName, new StartCommand()},
-            {StatusCommand.CommandName,new StatusCommand()},
-            {GetPuzzleCommand.CommandName,new GetPuzzleCommand()},
-            {DisplaySolvedPuzzles.CommandName,new DisplaySolvedPuzzles()},
+            {StatusCommand.CommandName, new StatusCommand()},
+            {GetPuzzleCommand.CommandName, new GetPuzzleCommand()},
+            {DisplaySolvedPuzzlesCommand.CommandName, new DisplaySolvedPuzzlesCommand()},
+            {HelpCommand.CommandName, new HelpCommand()},
         };
 
         public static CommandResult ExecuteCommand(Command command)
@@ -32,6 +38,11 @@ namespace Bot.CommandsHandler
                 return false;
 
             return true;
+        }
+
+        public static bool IsCommandForm(Command command)
+        {
+            return _regex.IsMatch(command.FullCommand);
         }
     }
 }

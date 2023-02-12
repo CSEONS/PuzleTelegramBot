@@ -1,16 +1,16 @@
 ﻿using Bot.Data;
 using Bot.Models;
 using System.Text;
-using Telegram.Bot.Types;
 
 namespace Bot.CommandsHandler.Commands
 {
-    public class StartCommand : ICommandProcessor
+    public class HelpCommand : ICommandProcessor
     {
         public static string CommandName => _commandName;
         public Player.Permissions Permission => Player.Permissions.User;
 
-        private static string _commandName = @"/start";
+
+        public static string _commandName = @"/help";
 
         public bool CanProcess(ICommand command)
         {
@@ -21,9 +21,25 @@ namespace Bot.CommandsHandler.Commands
         {
             if (!CanProcess(command)) throw new ArgumentException(nameof(command));
 
-            Player.TryCreateNew(command.User.Username, command.User.Id);
+            using (var context = new MuzzlePuzzleDBContext())
+            {
+                Player? player = context.Players.FirstOrDefault(x => x.TelegramIdentifier == command.User.Id);
 
-            return new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.Start));
+                if (player is null)
+                    throw new ArgumentException(nameof(player));
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                foreach (var item in CommandExecuter.Commands)
+                {
+                    if (player.Permission <= item.Value.Permission)
+                    {
+                        stringBuilder = stringBuilder.AppendLine(item.Value.GetDescription());
+                    }
+                }
+
+                return new CommandResult(stringBuilder.ToString());
+            }
         }
 
         public string GetDescription()

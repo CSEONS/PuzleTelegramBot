@@ -24,7 +24,7 @@ namespace Bot.Models
                     throw new ArgumentNullException(nameof(player));
 
                 if (player.CurrentPuzzle is null)
-                    return new CommandResult(PuzzleMessage.GetInformationString(PuzzleMessage.InformationType.TryGetPuzzle));
+                    return new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.TryGetPuzzle));
 
                 if (CheckAnswerForCorrectness(command.FullCommand, player.CurrentPuzzle))
                 {
@@ -37,11 +37,11 @@ namespace Bot.Models
                     player.CurrentPuzzle = null;
                     context.SaveChanges();
 
-                    return new CommandResult(PuzzleMessage.GetInformationString(PuzzleMessage.InformationType.CorrectAnswer));
+                    return new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.CorrectAnswer));
                 }
             }
 
-            return new CommandResult(PuzzleMessage.GetInformationString(PuzzleMessage.InformationType.WrongAnswer));
+            return new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.WrongAnswer));
         }
 
         private static bool CheckAnswerForCorrectness(string userAnswer, Puzzle? currentPuzzle)
