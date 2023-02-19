@@ -1,13 +1,15 @@
 ﻿using Bot.CommandsHandler.Commands;
 using Bot.Data;
+using Bot.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
 namespace Bot.CommandsHandler
 {
     public class CommandExecuter
     {
-        public static CommandResult NoCommand => new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.ItNoPuzzle));
-        private static Regex _regex = new Regex("^[$\\/]");
+        public static CommandResult NoCommand => new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.WrongCommand));
+        private static Regex _commandMask = new Regex(@"^[$\/](.*)");
 
         public static readonly Dictionary<string, ICommandProcessor> Commands = new()
         {
@@ -16,33 +18,47 @@ namespace Bot.CommandsHandler
             {GetPuzzleCommand.CommandName, new GetPuzzleCommand()},
             {DisplaySolvedPuzzlesCommand.CommandName, new DisplaySolvedPuzzlesCommand()},
             {HelpCommand.CommandName, new HelpCommand()},
+            {AddPuzzleCommand.CommandName, new AddPuzzleCommand()},
         };
 
         public static CommandResult ExecuteCommand(Command command)
         {
-            ICommandProcessor commandProcessor = Commands.FirstOrDefault(x => x.Key.ToLower() == command.CommandName.Split().FirstOrDefault()?.ToLower()).Value;
+            if (IsCommandForm(command) is false)
+                return new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.WrongCommand));
+
+            if (Commands.ContainsKey(command.CommandName) is false)
+                return new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.WrongCommand));
+
+
+            ICommandProcessor commandProcessor = Commands.FirstOrDefault(x => x.Key.ToLower() == _commandMask.Match(command.CommandName).ToString().ToLower()).Value;
 
             if (commandProcessor is null)
                 return CommandResult.Empty;
 
+            if (HavePermission(command, commandProcessor) is false)
+                return new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.NotPermissions));
+
             return commandProcessor.ProcessCommand(command);
         }
 
-        public static bool TryParse(string commandName, out ICommandProcessor commandProcessor)
+        public static bool HavePermission(Command command, ICommandProcessor commandProcessor)
         {
-            var command = commandName.Split().FirstOrDefault()?.ToLower();
+            if (command.CommandName == StartCommand.CommandName)
+                return true;
 
-            commandProcessor = Commands.FirstOrDefault(x => x.Key == command).Value;
+            using var context = new MuzzlePuzzleDBContext();
 
-            if (commandProcessor is null)
-                return false;
+            Player? player = context.Players.FirstOrDefault(x => x.TelegramIdentifier == command.User.Id);
 
-            return true;
+            if (player == null)
+                throw new ArgumentNullException(nameof(player));
+
+            return player.Permission <= commandProcessor.Permission;
         }
 
         public static bool IsCommandForm(Command command)
         {
-            return _regex.IsMatch(command.FullCommand);
+            return _commandMask.IsMatch(command.FullCommand);
         }
     }
 }

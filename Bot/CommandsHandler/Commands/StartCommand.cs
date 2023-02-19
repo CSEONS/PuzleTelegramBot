@@ -21,7 +21,8 @@ namespace Bot.CommandsHandler.Commands
         {
             if (!CanProcess(command)) throw new ArgumentException(nameof(command));
 
-            Player.TryCreateNew(command.User.Username, command.User.Id);
+            if (Player.Exist(command.User) is false)
+                Player.CreateNew(command.User.Username, command.User.Id);
 
             return new CommandResult(MuzzlePuzzleMessage.GetInformationString(MuzzlePuzzleMessage.InformationType.Start));
         }

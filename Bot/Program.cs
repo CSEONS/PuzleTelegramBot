@@ -1,10 +1,6 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Bot.Data;
 using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Polling;
-using Bot.Data;
 
 namespace TelegramBotExperiments
 {

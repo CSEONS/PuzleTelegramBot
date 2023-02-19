@@ -25,7 +25,7 @@ namespace Bot.Models
             User
         }
 
-        public static void TryCreateNew(string? username, long id)
+        public static void CreateNew(string? username, long id)
         {
             using(var context = new MuzzlePuzzleDBContext())
             {
@@ -38,10 +38,39 @@ namespace Bot.Models
                 {
                     Name = username,
                     TelegramIdentifier = id,
+                    Permission = Permissions.User
                 };
+
+                if (InManagerList(player))
+                    player.Permission = Permissions.Manager;
+
 
                 context.Players.Add(player);
                 context.SaveChanges();
+            }
+        }
+
+        private static bool InManagerList(Player player)
+        {
+            if (Directory.Exists(BotConfiguration.ManagerListPath) is false)
+                Directory.CreateDirectory(BotConfiguration.ManagerListPath);
+
+            if (System.IO.File.Exists(BotConfiguration.ManagerListFullPath) is false)
+                System.IO.File.CreateText(BotConfiguration.ManagerListFullPath).Dispose();
+
+            using (var sr = new StreamReader(BotConfiguration.ManagerListFullPath))
+            {
+                string[] managersId = sr.ReadToEnd().Split();
+
+                foreach (var item in managersId)
+                {
+                    if (player.TelegramIdentifier.ToString() == item)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         }
 
@@ -53,6 +82,16 @@ namespace Bot.Models
                 $"Rank: {Rank}\n" +
                 $"Rating: {Rating}\n"+
                 $"Permission: {Permission}";
+        }
+
+        public static bool Exist(User user)
+        {
+            using (var context = new MuzzlePuzzleDBContext())
+            {
+                Player? player = context.Players.FirstOrDefault(x => x.TelegramIdentifier == user.Id);
+
+                return (player is null) is false;
+            }
         }
     }
 }

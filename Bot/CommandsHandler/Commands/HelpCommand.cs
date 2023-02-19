@@ -30,11 +30,11 @@ namespace Bot.CommandsHandler.Commands
 
                 StringBuilder stringBuilder = new StringBuilder();
 
-                foreach (var item in CommandExecuter.Commands)
+                foreach (var executedCommand in CommandExecuter.Commands)
                 {
-                    if (player.Permission <= item.Value.Permission)
+                    if (CommandExecuter.HavePermission(command, executedCommand.Value))
                     {
-                        stringBuilder = stringBuilder.AppendLine(item.Value.GetDescription());
+                        stringBuilder = stringBuilder.AppendLine(executedCommand.Value.GetDescription());
                     }
                 }
 

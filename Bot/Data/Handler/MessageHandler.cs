@@ -18,12 +18,11 @@ public class MessageHandler
         long chatId = update.Message.Chat.Id;
 
         Command command = new Command(clientMessage, user);
-        CommandResult commandResult = CommandResult.Empty;
+        CommandResult commandResult;
 
-        if (CommandExecuter.TryParse(clientMessage, out ICommandProcessor commandProcessor))
-            commandResult = commandProcessor.ProcessCommand(command);
-        else if (CommandExecuter.IsCommandForm(command))
-            commandResult = CommandExecuter.NoCommand;
+
+        if(CommandExecuter.IsCommandForm(command))
+            commandResult = CommandExecuter.ExecuteCommand(command);
         else
             commandResult = Puzzle.ParesAnswer(command);
 

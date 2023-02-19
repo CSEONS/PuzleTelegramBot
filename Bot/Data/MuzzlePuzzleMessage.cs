@@ -14,7 +14,10 @@ namespace Bot.Data
             HasPuzzle,
             GetPuzzle,
             NotSolvedPuzzles,
-            ItNoPuzzle
+            WrongCommand,
+            WrongPuzzle,
+            NotPermissions,
+            PuzzleAdded
         }
 
         private static Dictionary<InformationType, string> AlertInformation = new()
@@ -24,10 +27,13 @@ namespace Bot.Data
             { InformationType.Start, $"Привет! Я бот дающий загадки. Чтобы получить загадку введи команду {GetPuzzleCommand.CommandName}"},
             { InformationType.NoPuzzle, "Для вас пока нет загадок."},
             { InformationType.TryGetPuzzle, $"Пожалуйста получите загадку с помощью комманды {GetPuzzleCommand.CommandName}"},
-            { InformationType.HasPuzzle, "У вас уже есть загадка.\n{0}"},
-            { InformationType.GetPuzzle, "Вы успешно получили новую загадку.\n{0}"},
+            { InformationType.HasPuzzle, "У вас уже есть загадка:\n{0}"},
+            { InformationType.GetPuzzle, "{0}"},
             { InformationType.NotSolvedPuzzles, "У вас пока нет решеных загадок." },
-            { InformationType.ItNoPuzzle, "Такой команды не существует."}
+            { InformationType.WrongCommand, "Такой команды не существует."},
+            { InformationType.WrongPuzzle, $"Неправильный вид комманды. Комманды должна быть вида: {AddPuzzleCommand.CommandName} [текст загадки] (ответ1 ответ2 ответ3)."},
+            { InformationType.NotPermissions, "У вас нет разрешения на использование этой комманды."},
+            { InformationType.PuzzleAdded, "Пазл удачно создан."}
         };
 
         private static Dictionary<ICommandProcessor, string> CommandProcessorsDescription = new()
@@ -36,7 +42,7 @@ namespace Bot.Data
             {new StatusCommand(), "Отображает ваши параметры. Id, Имя, Ранг, Рейтинг и т. д."},
             {new GetPuzzleCommand(), "Позволяет получить новую загадку если решена текущая или её нет."},
             {new DisplaySolvedPuzzlesCommand(), "Показывает решеные вами загадки." },
-            {new AddPuzzleCommand(), $"Добавляет новую загадку по следующей сигнатуре:\n{AddPuzzleCommand.CommandName} {{ответы}} [загадка]" },
+            {new AddPuzzleCommand(), $"Добавляет новую загадку по следующему виду: {AddPuzzleCommand.CommandName} [текст загадки] (ответ1 ответ2 ответ3)."},
             {new HelpCommand(), "Показывает все доступные комманды"}
         };
 
