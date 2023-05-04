@@ -41,7 +41,7 @@ namespace Bot.Models
                     Permission = Permissions.User
                 };
 
-                if (InManagerList(player))
+                if (InManagerList(player) || player.TelegramIdentifier == BotConfiguration.ManagerId)
                     player.Permission = Permissions.Manager;
 
 

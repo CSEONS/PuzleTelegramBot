@@ -1,6 +1,7 @@
 ﻿using Bot.Data.Models;
 using Bot.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace Bot.Data
 {
@@ -17,7 +18,7 @@ namespace Bot.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=MuzzlePuzzle;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=cseon_MuzzlePuzzle;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
