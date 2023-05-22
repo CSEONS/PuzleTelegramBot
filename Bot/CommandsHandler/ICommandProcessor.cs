@@ -1,5 +1,5 @@
 ﻿using Bot.Data;
-using Bot.Models;
+using Bot.Domain.Entities;
 using System.Text;
 
 public interface ICommandProcessor

@@ -1,9 +1,8 @@
-﻿using Bot.Data.Models;
-using Bot.Models;
+﻿using Bot.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
-namespace Bot.Data
+namespace Bot.Domain
 {
     public class MuzzlePuzzleDBContext : DbContext
     {

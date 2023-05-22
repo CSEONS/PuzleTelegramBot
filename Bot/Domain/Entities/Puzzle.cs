@@ -1,12 +1,11 @@
 ﻿using Bot.Data;
-using Bot.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Numerics;
 using Telegram.Bot.Types;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace Bot.Models
+namespace Bot.Domain.Entities
 {
     public class Puzzle
     {

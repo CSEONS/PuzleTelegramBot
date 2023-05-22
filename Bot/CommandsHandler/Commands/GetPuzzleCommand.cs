@@ -1,6 +1,6 @@
 ﻿using Bot.Data;
-using Bot.Data.Models;
-using Bot.Models;
+using Bot.Domain;
+using Bot.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 

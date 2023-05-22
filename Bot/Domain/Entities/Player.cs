@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using Telegram.Bot.Types;
 
-namespace Bot.Models
+namespace Bot.Domain.Entities
 {
     public class Player
     {
-        
+
 
         public int Id { get; set; }
         public long TelegramIdentifier { get; set; }
@@ -27,7 +27,7 @@ namespace Bot.Models
 
         public static void CreateNew(string? username, long id)
         {
-            using(var context = new MuzzlePuzzleDBContext())
+            using (var context = new MuzzlePuzzleDBContext())
             {
                 Player? player = context.Players.FirstOrDefault(x => x.TelegramIdentifier == id);
 
@@ -80,7 +80,7 @@ namespace Bot.Models
                 $"Id: {Id}\n" +
                 $"Name: {Name}\n" +
                 $"Rank: {Rank}\n" +
-                $"Rating: {Rating}\n"+
+                $"Rating: {Rating}\n" +
                 $"Permission: {Permission}";
         }
 
@@ -90,7 +90,7 @@ namespace Bot.Models
             {
                 Player? player = context.Players.FirstOrDefault(x => x.TelegramIdentifier == user.Id);
 
-                return (player is null) is false;
+                return player is null is false;
             }
         }
     }

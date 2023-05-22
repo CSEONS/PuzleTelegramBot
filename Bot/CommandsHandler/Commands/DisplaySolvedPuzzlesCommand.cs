@@ -1,12 +1,8 @@
 ﻿using Bot.Data;
-using Bot.Data.Models;
-using Bot.Models;
+using Bot.Domain;
+using Bot.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Bot.CommandsHandler.Commands
 {
@@ -40,7 +36,7 @@ namespace Bot.CommandsHandler.Commands
                 {
                     stringBuilder.Append($"{solvedPuzzle.Puzzle.Id}\n{solvedPuzzle.Puzzle.Text}\n{solvedPuzzle.Puzzle.Answers}\n{new string('#', 10)}\n");
                 }
-        
+
                 return new CommandResult(stringBuilder.ToString());
             }
 

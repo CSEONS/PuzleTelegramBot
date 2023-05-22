@@ -1,5 +1,5 @@
 ﻿using Bot.CommandsHandler;
-using Bot.Models;
+using Bot.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 

@@ -1,5 +1,6 @@
 ﻿using Bot.Data;
-using Bot.Models;
+using Bot.Domain;
+using Bot.Domain.Entities;
 using System.Text;
 using System.Text.RegularExpressions;
 

@@ -1,6 +1,7 @@
 ﻿using Bot.CommandsHandler.Commands;
 using Bot.Data;
-using Bot.Models;
+using Bot.Domain;
+using Bot.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
